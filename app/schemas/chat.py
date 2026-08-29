@@ -1,4 +1,6 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+
+from core.sanitizer import sanitize_input
 
 
 class ChatRequest(BaseModel):
@@ -12,6 +14,14 @@ class ChatRequest(BaseModel):
         max_length=10_000,
         description="User's message",
     )
+
+    @field_validator("prompt", mode="before")
+    @classmethod
+    def sanitize_prompt(cls, v: str) -> str:
+        """Sanitize the prompt input to remove problematic characters."""
+        if isinstance(v, str):
+            return sanitize_input(v)
+        return v
 
 
 class ChatResponse(BaseModel):
