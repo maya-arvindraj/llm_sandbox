@@ -1,6 +1,9 @@
+import logging
 from typing import Annotated
 
 from fastapi import APIRouter, Header, HTTPException
+
+logger = logging.getLogger(__name__)
 
 from dependencies import get_chat_service
 from schemas.chat import (
@@ -40,6 +43,12 @@ async def chat(
         )
 
     except Exception as exc:
+        logger.exception(
+            "Chat request failed for session=%s model=%s prompt_preview=%r",
+            x_session_id,
+            service.llm_client.model,
+            request.prompt[:120] if request.prompt else "",
+        )
         raise HTTPException(
             status_code=500,
             detail="Failed to process chat request.",

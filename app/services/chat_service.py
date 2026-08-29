@@ -1,5 +1,7 @@
 import uuid
 
+from core.config import settings
+from core.prompt import SYSTEM_PROMPT
 from repositories.redis_repository import RedisRepository
 from clients.llm_client import LLMClient
 from schemas.chat import ChatRequest, ChatResponse
@@ -42,13 +44,12 @@ class ChatService:
         # Build messages for the LLM.
         messages = []
 
-        if request.system_prompt:
-            messages.append(
-                {
-                    "role": "system",
-                    "content": request.system_prompt,
-                }
-            )
+        messages.append(
+            {
+                "role": "system",
+                "content": SYSTEM_PROMPT,
+            }
+        )
 
         messages.extend(history)
 
@@ -62,7 +63,7 @@ class ChatService:
         # Generate response.
         assistant_reply = await self.llm_client.generate_response(
             messages=messages,
-            temperature=request.temperature,
+            temperature=settings.default_temperature,
         )
 
         # Persist conversation.

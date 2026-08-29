@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from api.routes.chat import router as chat_router
 from core.config import get_settings
 from core.logging import configure_logging
+from core.rate_limit import configure_rate_limiter
 from dependencies import (
     close_dependencies,
     init_dependencies,
@@ -35,6 +36,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+configure_rate_limiter(app)
 
 app.include_router(chat_router)
 

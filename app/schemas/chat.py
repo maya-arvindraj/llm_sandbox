@@ -13,19 +13,6 @@ class ChatRequest(BaseModel):
         description="User's message",
     )
 
-    system_prompt: str | None = Field(
-        default=None,
-        max_length=5_000,
-        description="Optional system instruction",
-    )
-
-    temperature: float = Field(
-        default=0.7,
-        ge=0.0,
-        le=2.0,
-        description="LLM sampling temperature",
-    )
-
 
 class ChatResponse(BaseModel):
     """

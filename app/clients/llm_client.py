@@ -1,6 +1,9 @@
+import logging
 from typing import Any
 
 from openai import AsyncOpenAI
+
+logger = logging.getLogger(__name__)
 
 
 class LLMClient:
@@ -29,12 +32,6 @@ class LLMClient:
             model=self.model,
             messages=messages,
             temperature=temperature,
-            extra_body={
-                "chat_template_kwargs": {
-                    "thinking": True,
-                    "reasoning_effort": "high",
-                }
-            },
         )
 
         content = response.choices[0].message.content

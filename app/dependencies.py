@@ -12,7 +12,7 @@ from services.chat_service import ChatService
 settings = get_settings()
 
 redis_client: aioredis.Redis | None = None
-nvidia_client: AsyncOpenAI | None = None
+openai_client: AsyncOpenAI | None = None
 
 
 async def init_dependencies() -> None:
@@ -21,7 +21,7 @@ async def init_dependencies() -> None:
     """
 
     global redis_client
-    global nvidia_client
+    global openai_client
 
     redis_client = aioredis.Redis(
         host=settings.redis_host,
@@ -30,9 +30,9 @@ async def init_dependencies() -> None:
         decode_responses=True,
     )
 
-    nvidia_client = AsyncOpenAI(
-        base_url=settings.nvidia_base_url,
-        api_key=settings.nvidia_api_key,
+    openai_client = AsyncOpenAI(
+        base_url=settings.base_url,
+        api_key=settings.api_key,
     )
 
 
@@ -42,13 +42,13 @@ async def close_dependencies() -> None:
     """
 
     global redis_client
-    global nvidia_client
+    global openai_client
 
     if redis_client:
         await redis_client.aclose()
 
-    if nvidia_client:
-        await nvidia_client.close()
+    if openai_client:
+        await openai_client.close()
 
 
 def get_chat_service() -> ChatService:
@@ -59,8 +59,8 @@ def get_chat_service() -> ChatService:
     if redis_client is None:
         raise RuntimeError("Redis client is not initialized.")
 
-    if nvidia_client is None:
-        raise RuntimeError("NVIDIA client is not initialized.")
+    if openai_client is None:
+        raise RuntimeError("OpenAI client is not initialized.")
 
     redis_repository = RedisRepository(
         client=redis_client,
@@ -68,7 +68,7 @@ def get_chat_service() -> ChatService:
     )
 
     llm_client = LLMClient(
-        client=nvidia_client,
+        client=openai_client,
         model=settings.default_model,
     )
 
