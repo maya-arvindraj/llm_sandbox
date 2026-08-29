@@ -23,7 +23,7 @@ services:
           name: fastapi-redis
           property: connectionString
       - key: PORT
-        value: 10000            # FastAPI/uvicorn should bind to this port
+        value: 8000           # FastAPI/uvicorn should bind to this port
 
   # ---- Redis-compatible Key Value store ----
   - type: keyvalue
