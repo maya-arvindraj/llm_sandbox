@@ -19,7 +19,9 @@ class Settings(BaseSettings):
     default_temperature: float = 0.7
 
     # Redis
-    redis_host: str = os.environ.get("REDIS_URL", "redis")
+    # redis_host: str = os.environ.get("REDIS_URL", "redis")
+    redis_url: str = os.environ.get("REDIS_URL", "redis://redis:6379")
+
 
     redis_port: int = 6379
     redis_db: int = 0

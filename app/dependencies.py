@@ -23,11 +23,9 @@ async def init_dependencies() -> None:
     global redis_client
     global openai_client
 
-    redis_client = aioredis.Redis(
-        host=settings.redis_host,
-        port=settings.redis_port,
-        db=settings.redis_db,
-        decode_responses=True,
+    redis_client = aioredis.Redis.from_url(
+    settings.redis_url,
+    decode_responses=True,
     )
 
     openai_client = AsyncOpenAI(
